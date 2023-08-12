@@ -9,7 +9,7 @@ const visitorController = express.Router();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
    
-    cb(null, './public/uploads');
+    cb(null, './public/files');
   },
   filename: function (req, file, cb) {
    
@@ -21,6 +21,8 @@ const storage = multer.diskStorage({
   
 });
 const upload = multer({ storage: storage });
+//const baseUrl = 'http://localhost:8080/api';
+const baseUrl = 'https://practice-yg8v.onrender.com/api';
 
 visitorController.post("/addvisitor",upload.single('image'), async (req, res) => {
   const { complainantName, complainantNumber,
@@ -33,7 +35,7 @@ visitorController.post("/addvisitor",upload.single('image'), async (req, res) =>
     const visitor = new visitorModel({
       complainantName,
       complainantNumber,
-      image:req.file?.filename,
+      image:`${baseUrl}/${req.file.filename}`,
       problem,
       orderbyadgp,
       markto,
