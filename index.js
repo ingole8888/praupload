@@ -7,7 +7,7 @@ const visitorController=require("./routes/visitorroute")
 
 require('dotenv').config()
 const app=express()
-app.use("/api", express.static("public/uploads"))
+app.use("/api", express.static("public/files"))
 app.use(express.json())
 app.use(cors())
 
