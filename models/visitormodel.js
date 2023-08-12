@@ -14,7 +14,7 @@ const visitorSchema= new mongoose.Schema({
    //area:{type:String},
    details:{type:String},
    gender:{type:String},
-   image:[{type:String}],
+   image:{type:String},
    district:{type:String}
 },
 { timestamps: true }

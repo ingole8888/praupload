@@ -12,36 +12,28 @@ const storage = multer.diskStorage({
     cb(null, './public/uploads');
   },
   filename: function (req, file, cb) {
+   
+    // Generate a unique filename by appending a timestamp to the original filename
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, uniqueSuffix + '-' + file.originalname);
+    
   }
+  
 });
+const upload = multer({ storage: storage });
 
-const upload = multer({ 
-  storage: storage,
-  // fileFilter: function (req, file, cb) {
-  //   const allowedMimeTypes = ["image/jpeg", "image/png", "application/pdf"];
-  //   if (allowedMimeTypes.includes(file.mimetype)) {
-  //     cb(null, true); 
-  //   } else {
-  //     cb(new Error("Invalid file type. Only images (JPEG, PNG) and PDFs are allowed."));
-  //   }
-  // }
- });
-
-visitorController.post("/addvisitor",upload.fields([
-  { name: "image", maxCount: 5 }
-]), async (req, res) => {
+visitorController.post("/addvisitor",upload.single('image'), async (req, res) => {
   const { complainantName, complainantNumber,
     problem, orderbyadgp, markto, FirNumber,
     complainClerk, PhoneNumber, complainType,
     address, details, gender, district } = req.body;
-
+    console.log(req.file.filename)
 
   try {
     const visitor = new visitorModel({
       complainantName,
       complainantNumber,
+      image:req.file?.filename,
       problem,
       orderbyadgp,
       markto,
@@ -55,12 +47,6 @@ visitorController.post("/addvisitor",upload.fields([
       gender,
       district
     });
-
-    if(req.files.length != 0 ){
-      if (req.files["image"]) {
-        visitor.image = req.files["image"].map(file => file.filename);
-      }
-    }
 
     await visitor.save();
     
